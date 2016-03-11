@@ -1,7 +1,6 @@
 .idea/
-.classpath
-.project
-.gitignore.swp
+/lib
+
 ### Java template
 *.class
 
@@ -17,4 +16,3 @@
 hs_err_pid*
 
 # Created by .ignore support plugin (hsz.mobi)
-/bin/
