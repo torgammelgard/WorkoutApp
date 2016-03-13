@@ -12,6 +12,7 @@ public class Model {
 
     private TableModel tableModel;
     private String[] woArr;
+    private String[] columnNames = new String[]{"Name", "Sets", "Reps", "Weight"};
 
     public Model() {
         updateTable(1); //TODO change parameter
@@ -43,17 +44,17 @@ public class Model {
 
                 @Override
                 public int getColumnCount() {
-                    return 0;
+                    return columnNames.length;
                 }
 
                 @Override
                 public String getColumnName(int columnIndex) {
-                    return null;
+                    return columnNames[columnIndex];
                 }
 
                 @Override
                 public Class<?> getColumnClass(int columnIndex) {
-                    return null;
+                    return String.class;
                 }
 
                 @Override

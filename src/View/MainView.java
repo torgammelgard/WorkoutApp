@@ -17,8 +17,6 @@ public class MainView extends JFrame {
 
     private JList woList;
 
-    private String[] columnNames = new String[]{"Name", "Sets", "Reps", "Weight"};
-
 	public MainView() throws HeadlessException {
 
 		setLayout(new GridLayout(1,3));
