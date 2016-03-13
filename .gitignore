@@ -1,7 +1,11 @@
+# intelliJ
 .idea/
 /lib
-
 *.iml
+
+# eclipse
+.classpath
+.project
 
 ### Java template
 *.class
