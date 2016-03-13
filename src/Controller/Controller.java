@@ -1,20 +1,29 @@
 package Controller;
 
-import Model.WorkoutManager;
 import View.MainView;
+import Model.Model;
 
+import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 public class Controller implements MouseListener {
-
-    public Controller(MainView mainView) {
+    Model model;
+    public Controller(Model model, MainView mainView) {
+        this.model = model;
         mainView.getWoList().addMouseListener(this);
+        mainView.getWoList().setListData(model.getWoListModel());
+        mainView.getExerciseTable().setModel(model.getTableModel());
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        System.out.println("Clickkkkk");
+        if (e.getSource() instanceof JList) {
+            int id = ((JList) e.getSource()).getSelectedIndex();
+            model.updateTable(id);
+        }
+
+
     }
 
     @Override

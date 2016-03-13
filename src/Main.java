@@ -1,19 +1,16 @@
 import Controller.Controller;
 import View.MainView;
-
+import Model.Model;
 import javax.swing.*;
 import java.sql.SQLException;
 
-/**
- * Created by torgammelgard on 2016-03-10.
- */
 public class Main {
 	
 	public static void main (String[] args) throws SQLException {
-		
+		Model model = new Model();
 		SwingUtilities.invokeLater(() -> {
 			MainView mView = new MainView();
-			Controller controller = new Controller(mView);
+			Controller controller = new Controller(model, mView);
 		});
 	}
 }

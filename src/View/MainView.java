@@ -1,12 +1,7 @@
 package View;
 
-import Model.WorkoutManager;
-
 import javax.swing.*;
-import javax.swing.event.TableModelListener;
-import javax.swing.table.TableModel;
 import java.awt.*;
-import java.sql.SQLException;
 
 
 public class MainView extends JFrame {
@@ -18,21 +13,18 @@ public class MainView extends JFrame {
 
 	private JLabel nameLabel, typeLabel, infoLabel, dateLabel;
     private JButton woAddButton;
-
-    public JList getWoList() {
-        return woList;
-    }
+    private JTable exerciseTable;
 
     private JList woList;
 
     private String[] columnNames = new String[]{"Name", "Sets", "Reps", "Weight"};
 
 	public MainView() throws HeadlessException {
-		
+
 		setLayout(new GridLayout(1,3));
 		JPanel leftpanel = createLeftpanel();
 		woList = createWoList();
-        JTable exerciseTable = createTable();
+        exerciseTable = createTable();
 
 
         add(leftpanel);
@@ -46,7 +38,15 @@ public class MainView extends JFrame {
 		setVisible(true);
 
 	}
-	
+
+    public JList getWoList() {
+        return woList;
+    }
+
+    public JTable getExerciseTable() {
+        return exerciseTable;
+    }
+
 	private JPanel createLeftpanel() {
 		JPanel lp = new JPanel();
 		lp.setLayout(new GridLayout(5, 2));
@@ -77,69 +77,13 @@ public class MainView extends JFrame {
 	}
 
     private JList createWoList() {
-        String[] workoutNames = null;
-        try {
-            workoutNames = WorkoutManager.getAllWoNames();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        JList l = new JList(workoutNames);
-        for (String s : workoutNames)
-            System.out.println(s);
-
+        JList l = new JList();
         return l;
     }
 
     private JTable createTable() {
 
-        TableModel tm = new TableModel() {
-            @Override
-            public int getRowCount() {
-                return 5;
-            }
-
-            @Override
-            public int getColumnCount() {
-                return 4;
-            }
-
-            @Override
-            public String getColumnName(int columnIndex) {
-                return columnNames[columnIndex];
-            }
-
-            @Override
-            public Class<?> getColumnClass(int columnIndex) {
-                return String.class;
-            }
-
-            @Override
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return false;
-            }
-
-            @Override
-            public Object getValueAt(int rowIndex, int columnIndex) {
-                return 1;
-            }
-
-            @Override
-            public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-
-            }
-
-            @Override
-            public void addTableModelListener(TableModelListener l) {
-
-            }
-
-            @Override
-            public void removeTableModelListener(TableModelListener l) {
-
-            }
-        };
-
-        JTable table = new JTable(tm);
+        JTable table = new JTable();
         return table;
     }
 }
