@@ -1,8 +1,7 @@
 package View;
 
-import sun.plugin.javascript.JSContext;
-
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 
 
@@ -21,18 +20,28 @@ public class MainView extends JFrame {
 
 	public MainView() throws HeadlessException {
 
-		setLayout(new GridLayout(1,3));
+		setLayout(new GridBagLayout());
 		JPanel leftpanel = createLeftpanel();
-		woList = createWoList();
-        exerciseTable = createTable();
+		woList = new JList();
+        exerciseTable = new JTable();
         exerciseTable.setFillsViewportHeight(true);
 
-        add(leftpanel);
-        add(new JScrollPane(woList));
-        add(new JScrollPane(exerciseTable));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+        gbc.weightx = 0;
+        gbc.weighty = 1;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        add(leftpanel, gbc);
+        gbc.gridx = 1;
+        gbc.weightx = 1;
+        gbc.fill = GridBagConstraints.BOTH;
+        add(new JScrollPane(woList), gbc);
+        gbc.gridx = 2;
+        add(new JScrollPane(exerciseTable), gbc);
 
 		setTitle("Workout App");
-		pack();
+		setSize(1000, 600);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setVisible(true);
@@ -48,42 +57,85 @@ public class MainView extends JFrame {
     }
 
 	private JPanel createLeftpanel() {
+        final Insets insets = new Insets(2, 2, 2, 2);
 		JPanel lp = new JPanel();
-		lp.setLayout(new GridLayout(5, 2));
+		lp.setLayout(new GridBagLayout());
 		woNameTextField = new JTextField();
+        Dimension d = woNameTextField.getPreferredSize();
+        d.width = 200;
+        woNameTextField.setPreferredSize(d);
+
 		woTypeTextField = new JTextField();
 		woInfoTextArea = new JTextArea();
+        woInfoTextArea.setRows(4);
 		woDateTextField = new JTextField();
-
         nameLabel = new JLabel("Name : ");
+        nameLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         typeLabel = new JLabel("Type : ");
+        typeLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         infoLabel = new JLabel("Info : ");
+        infoLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         dateLabel = new JLabel("Date : ");
+        dateLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 
         woAddButton = new JButton("Add");
 
-        lp.add(nameLabel);
-		lp.add(woNameTextField);
-        lp.add(typeLabel);
-		lp.add(woTypeTextField);
-        lp.add(infoLabel);
-		lp.add(woInfoTextArea);
-        lp.add(dateLabel);
-		lp.add(woDateTextField);
-        lp.add(woAddButton);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = insets;
+        gbc.weightx = 0;
+        gbc.weighty = 1;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 1;
+        lp.add(nameLabel, gbc);
 
-        setPreferredSize(new Dimension(500, 600));
-		return lp;
+        gbc.gridx = 1;
+        gbc.weightx = 1.0;
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+		lp.add(woNameTextField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.weightx = 0;
+        gbc.gridwidth = 1;
+        lp.add(typeLabel, gbc);
+
+        gbc.gridx = 1;
+        gbc.weightx = 1.0;
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+		lp.add(woTypeTextField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.weightx = 0;
+        gbc.gridwidth = 1;
+        lp.add(infoLabel, gbc);
+
+        gbc.gridx = 1;
+        gbc.weightx = 1.0;
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+		lp.add(new JScrollPane(woInfoTextArea), gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.weightx = 0;
+        gbc.gridwidth = 1;
+        lp.add(dateLabel, gbc);
+
+        gbc.gridx = 1;
+        gbc.weightx = 1.0;
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+		lp.add(woDateTextField, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 4;
+        gbc.weightx = 1.0;
+        gbc.gridwidth = 1;
+        lp.add(woAddButton, gbc);
+
+        Border leftPanelBorder = BorderFactory.createTitledBorder("Add exercise");
+        lp.setBorder(leftPanelBorder);
+        return lp;
 	}
-
-    private JList createWoList() {
-        JList l = new JList();
-        return l;
-    }
-
-    private JTable createTable() {
-
-        JTable table = new JTable();
-        return table;
-    }
 }
