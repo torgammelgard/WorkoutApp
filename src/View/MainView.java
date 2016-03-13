@@ -1,5 +1,7 @@
 package View;
 
+import sun.plugin.javascript.JSContext;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -23,11 +25,11 @@ public class MainView extends JFrame {
 		JPanel leftpanel = createLeftpanel();
 		woList = createWoList();
         exerciseTable = createTable();
-
+        exerciseTable.setFillsViewportHeight(true);
 
         add(leftpanel);
-        add(woList);
-        add(exerciseTable);
+        add(new JScrollPane(woList));
+        add(new JScrollPane(exerciseTable));
 
 		setTitle("Workout App");
 		pack();
