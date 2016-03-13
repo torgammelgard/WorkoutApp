@@ -18,11 +18,16 @@ public class MainView extends JFrame {
 
     private JList woList;
 
+    private static final Font LABEL_FONT = new Font("Arial", Font.PLAIN, 16);
+    private static final Font TEXTFIELD_FONT = new Font("Arial", Font.PLAIN, 16);
+
+
 	public MainView() throws HeadlessException {
 
 		setLayout(new GridBagLayout());
 		JPanel leftpanel = createLeftpanel();
 		woList = new JList();
+        JScrollPane woListScrollPane = new JScrollPane(woList);
         exerciseTable = new JTable();
         exerciseTable.setFillsViewportHeight(true);
 
@@ -33,14 +38,18 @@ public class MainView extends JFrame {
         gbc.gridx = 0;
         gbc.gridy = 0;
         add(leftpanel, gbc);
+
         gbc.gridx = 1;
         gbc.weightx = 1;
         gbc.fill = GridBagConstraints.BOTH;
-        add(new JScrollPane(woList), gbc);
+
+        add(woListScrollPane, gbc);
+
         gbc.gridx = 2;
         add(new JScrollPane(exerciseTable), gbc);
 
-		setTitle("Workout App");
+
+        setTitle("Workout App");
 		setSize(1000, 600);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -60,23 +69,15 @@ public class MainView extends JFrame {
         final Insets insets = new Insets(2, 2, 2, 2);
 		JPanel lp = new JPanel();
 		lp.setLayout(new GridBagLayout());
-		woNameTextField = new JTextField();
-        Dimension d = woNameTextField.getPreferredSize();
-        d.width = 200;
-        woNameTextField.setPreferredSize(d);
-
+		woNameTextField = makeTextField();
 		woTypeTextField = new JTextField();
 		woInfoTextArea = new JTextArea();
         woInfoTextArea.setRows(4);
 		woDateTextField = new JTextField();
-        nameLabel = new JLabel("Name : ");
-        nameLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-        typeLabel = new JLabel("Type : ");
-        typeLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-        infoLabel = new JLabel("Info : ");
-        infoLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-        dateLabel = new JLabel("Date : ");
-        dateLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        nameLabel = makeLabel("Name : ");
+        typeLabel = makeLabel("Type : ");
+        infoLabel = makeLabel("Info : ");
+        dateLabel = makeLabel("Date : ");
 
         woAddButton = new JButton("Add");
 
@@ -138,4 +139,19 @@ public class MainView extends JFrame {
         lp.setBorder(leftPanelBorder);
         return lp;
 	}
+
+    private JLabel makeLabel(String text) {
+        JLabel l = new JLabel(text);
+        l.setFont(LABEL_FONT);
+        l.setHorizontalAlignment(SwingConstants.RIGHT);
+        return l;
+    }
+    private JTextField makeTextField() {
+        JTextField tf = new JTextField();
+        Dimension d = tf.getPreferredSize();
+        d.width = 250;
+        tf.setPreferredSize(d);
+        tf.setFont(TEXTFIELD_FONT);
+        return tf;
+    }
 }

@@ -34,6 +34,7 @@ public class WorkoutManager {
         return resArray != null ? resArray : new String[0];
     }
 
+    // TODO create a workoutsExercisesBean for this method to return
     public static void getWoExeForId(int woID) throws SQLException {
         try (
                 Connection conn = DriverManager.getConnection(CONN_STRING, USERNAME, PASSWORD);
