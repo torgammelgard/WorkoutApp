@@ -8,7 +8,7 @@ public class WorkoutManager {
 
     private static final String USERNAME = "sql_project2";
     private static final String PASSWORD = "sql_project";
-    private static final String CONN_STRING = "jdbc:mysql://localhost:8889/sql_project";
+    private static final String CONN_STRING = "jdbc:mysql://localhost/sql_project";
 
     public static String[] getAllWoNames() throws SQLException {
         String[] resArray = null;
