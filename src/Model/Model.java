@@ -12,21 +12,26 @@ public class Model {
     }
 
     private TableModel tableModel;
-    private String[] woArr;
+    private List<WorkoutsBean> workouts;
     private String[] columnNames = new String[]{"Name", "Sets", "Reps", "Weight"};
 
     public Model() {
-        updateTable(1); //TODO change parameter
+        initTable();
         updateList();
     }
 
     public String[] getWoListModel() {
-        return woArr;
+        String[] names = new String[workouts.size()];
+        int i = 0;
+        for (WorkoutsBean workout : workouts) {
+            names[i++] = workout.getName();
+        }
+        return names;
     }
 
     public void updateList() {
         try {
-            woArr = WorkoutManager.getAllWoNames();
+            workouts = WorkoutManager.getAllWoNames();
         } catch (SQLException e) {
             System.err.println("Error message: " + e.getMessage());
             System.err.println("Error code: " + e.getErrorCode());
@@ -35,7 +40,7 @@ public class Model {
 
     }
 
-    public void updateTable(int workoutID) {
+    private void initTable() {
         if (tableModel == null) {
             tableModel = new TableModel() {
                 @Override
@@ -84,9 +89,16 @@ public class Model {
                 }
             };
         }
+    }
+    public void updateTable(int selectionIndex) {
 
         try {
-            List<WorkoutsExercisesBean> workoutsExercisesBeans = WorkoutManager.getWorkoutsExercises(2);
+            int id = 0;
+            if (workouts != null) {
+                id = workouts.get(selectionIndex).getId();
+            }
+
+            List<WorkoutsExercisesBean> workoutsExercisesBeans = WorkoutManager.getWorkoutsExercises(id);
             tableModel = new TableModel() {
                 @Override
                 public int getRowCount() {
@@ -148,6 +160,17 @@ public class Model {
 
     }
 
+    public boolean insertWorkout(WorkoutsBean bean) {
+        try {
+            if (WorkoutManager.insertWorkout(bean)) {
+                updateList();
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }
 
 

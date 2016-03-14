@@ -10,22 +10,24 @@ public class WorkoutManager {
     private static final String PASSWORD = "sql_project";
     private static final String CONN_STRING = "jdbc:mysql://localhost:8889/sql_project";
 
-    public static String[] getAllWoNames() throws SQLException {
-        String[] resArray = null;
+    public static List<WorkoutsBean> getAllWoNames() throws SQLException {
+        List<WorkoutsBean> beans = new ArrayList<>(10);
 
         try (
                 Connection conn = DriverManager.getConnection(CONN_STRING, USERNAME, PASSWORD);
                 Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-                ResultSet rs = stmt.executeQuery("SELECT name FROM workouts")
+                ResultSet rs = stmt.executeQuery("SELECT * FROM workouts")
 
         ) {
-            rs.last();
-            int num_rows = rs.getRow();
-            rs.beforeFirst();
-            resArray = new String[num_rows];
-            int i = 0;
-            while (rs.next())
-                resArray[i++] = rs.getString("name");
+            while (rs.next()) {
+                WorkoutsBean bean = new WorkoutsBean();
+                bean.setId(rs.getInt("id"));
+                bean.setName(rs.getString("name"));
+                bean.setType(rs.getString("type"));
+                bean.setInfo(rs.getString("info"));
+                bean.setDate(rs.getDate("date"));
+                beans.add(bean);
+            }
 
         } catch (SQLException e) {
             System.err.println("Error message: " + e.getMessage());
@@ -33,7 +35,7 @@ public class WorkoutManager {
             System.err.println("SQL state: " + e.getSQLState());
         }
 
-        return resArray != null ? resArray : new String[0];
+        return beans;
     }
 
     // TODO create a workoutsExercisesBean for this method to return
@@ -61,5 +63,19 @@ public class WorkoutManager {
             System.err.println("SQL state: " + e.getSQLState());
         }
         return l;
+    }
+
+    public static boolean insertWorkout(WorkoutsBean bean) throws SQLException {
+        try (
+                Connection conn = DriverManager.getConnection(CONN_STRING, USERNAME, PASSWORD);
+                PreparedStatement stmt = conn.prepareStatement("INSERT INTO workouts (name, type, info, date) VALUES (?, ?, ?, ?)", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
+        ) {
+            stmt.setString(1, bean.getName());
+            stmt.setString(2, bean.getType());
+            stmt.setString(3, bean.getInfo());
+            stmt.setDate(4, bean.getDate());
+            int affectedRows = stmt.executeUpdate();
+            return (affectedRows == 1);
+        }
     }
 }

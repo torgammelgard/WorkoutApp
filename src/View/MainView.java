@@ -7,12 +7,14 @@ import java.awt.*;
 
 public class MainView extends JFrame {
 
-	private JTextField woNameTextField;
-	private JTextField woTypeTextField;
-	private JTextArea woInfoTextArea;
-	private JTextField woDateTextField;
+    private JTextField woNameTextField;
+
+    private JTextArea woInfoTextArea;
+    private JTextField woDateTextField;
+    private JTextField woTypeTextField;
 
 	private JLabel nameLabel, typeLabel, infoLabel, dateLabel;
+
     private JButton woAddButton;
     private JTable exerciseTable;
 
@@ -56,6 +58,21 @@ public class MainView extends JFrame {
 		setVisible(true);
 
 	}
+    public JTextField getWoNameTextField() {
+        return woNameTextField;
+    }
+
+    public JTextField getWoTypeTextField() {
+        return woTypeTextField;
+    }
+
+    public JTextArea getWoInfoTextArea() {
+        return woInfoTextArea;
+    }
+
+    public JTextField getWoDateTextField() {
+        return woDateTextField;
+    }
 
     public JList getWoList() {
         return woList;
@@ -65,7 +82,11 @@ public class MainView extends JFrame {
         return exerciseTable;
     }
 
-	private JPanel createLeftpanel() {
+    public JButton getWoAddButton() {
+        return woAddButton;
+    }
+
+    private JPanel createLeftpanel() {
         final Insets insets = new Insets(2, 2, 2, 2);
 		JPanel lp = new JPanel();
 		lp.setLayout(new GridBagLayout());
@@ -135,7 +156,7 @@ public class MainView extends JFrame {
         gbc.gridwidth = 1;
         lp.add(woAddButton, gbc);
 
-        Border leftPanelBorder = BorderFactory.createTitledBorder("Add exercise");
+        Border leftPanelBorder = BorderFactory.createTitledBorder("Add workout");
         lp.setBorder(leftPanelBorder);
         return lp;
 	}
