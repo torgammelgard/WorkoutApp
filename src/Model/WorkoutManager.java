@@ -1,6 +1,8 @@
 package Model;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class WorkoutManager {
 
@@ -35,20 +37,28 @@ public class WorkoutManager {
     }
 
     // TODO create a workoutsExercisesBean for this method to return
-    public static void getWoExeForId(int woID) throws SQLException {
+    public static List<WorkoutsExercisesBean> getWorkoutsExercises() throws SQLException {
+        List<WorkoutsExercisesBean> l = new ArrayList<>(10);
         try (
                 Connection conn = DriverManager.getConnection(CONN_STRING, USERNAME, PASSWORD);
-                PreparedStatement stmt = conn.prepareStatement("SELECT sets, reps, weight FROM workouts_exercises WHERE workout_id = ?", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
+                PreparedStatement stmt = conn.prepareStatement("SELECT * FROM workouts_exercises we LEFT JOIN workouts w ON we.workout_id = w.id JOIN exercises e ON we.exercise_id = e.id", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
         ) {
-            stmt.setInt(1, woID);
             ResultSet rs = stmt.executeQuery();
+
             while (rs.next()) {
-                System.out.println(rs.getString("sets"));
+                WorkoutsExercisesBean bean = new WorkoutsExercisesBean();
+                bean.setwo_id(rs.getInt("wo_id"));
+                bean.setex_id(rs.getInt("ex_id"));
+                bean.setSets(rs.getInt("sets"));
+                bean.setReps(rs.getInt("reps"));
+                bean.setWeight(rs.getInt("weight"));
+                l.add(bean);
             }
         } catch (SQLException e) {
             System.err.println("Error message: " + e.getMessage());
             System.err.println("Error code: " + e.getErrorCode());
             System.err.println("SQL state: " + e.getSQLState());
         }
+        return l;
     }
 }
