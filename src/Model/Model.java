@@ -86,7 +86,7 @@ public class Model {
         }
 
         try {
-            List<WorkoutsExercisesBean> workoutsExercisesBeans = WorkoutManager.getWorkoutsExercises();
+            List<WorkoutsExercisesBean> workoutsExercisesBeans = WorkoutManager.getWorkoutsExercises(2);
             tableModel = new TableModel() {
                 @Override
                 public int getRowCount() {
@@ -139,7 +139,7 @@ public class Model {
                 public void removeTableModelListener(TableModelListener l) {
 
                 }
-            }
+            };
         } catch (SQLException e) {
             System.err.println("Error message: " + e.getMessage());
             System.err.println("Error code: " + e.getErrorCode());
