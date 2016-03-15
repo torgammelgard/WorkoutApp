@@ -2,11 +2,13 @@ package View;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.table.JTableHeader;
 import java.awt.*;
 
 
 public class MainView extends JFrame {
 
+    private static final Font HEADER_FONT = new Font("Arial", Font.BOLD, 24);
     private static final Font LABEL_FONT = new Font("Arial", Font.PLAIN, 16);
     private static final Font TEXTFIELD_FONT = new Font("Arial", Font.PLAIN, 16);
 
@@ -49,13 +51,18 @@ public class MainView extends JFrame {
 	public MainView() throws HeadlessException {
 
 		setLayout(new GridBagLayout());
-		JPanel leftpanel = createLeftpanel();
+        JPanel leftpanel = createLeftpanel();
 		JPanel bottomPanel = createBottomPanel();
         JPanel searchPanel = createSearchPanel();
        
 		woList = new JList();
+
         JScrollPane woListScrollPane = new JScrollPane(woList);
+
         exerciseTable = new JTable();
+        JTableHeader header = exerciseTable.getTableHeader();
+        header.setPreferredSize(new Dimension(125, 40));
+        header.setFont(HEADER_FONT);
         exerciseTable.setFillsViewportHeight(true);
         workoutExerciseDeleteButton = new JButton("DELETE");
         workoutExerciseAddButton = new JButton("ADD");
