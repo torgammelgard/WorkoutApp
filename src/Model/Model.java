@@ -238,6 +238,17 @@ public class Model {
         }
         return list;
     }
+    public boolean insertExercise(ExercisesBean bean) {
+    	boolean res = false;
+		try {
+			res = ExerciseManager.insertExercise(bean);
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+    	System.out.println(res);
+    	return res;
+    }
 }
 
 

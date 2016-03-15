@@ -18,6 +18,7 @@ public class Controller implements MouseListener, ActionListener {
     private static final String WORKOUT_EXERCISE_DELETE_ACTIONCOMMAND = "workout_exercise_delete_actioncommand";
     private static final String WORKOUT_EXERCISE_ADD_ACTIONCOMMAND = "workout_exercise_add_actioncommand";
     private static final String SEARCH_WORKOUTS_ACTIONCOMMAND = "search_workouts_actioncommand";
+    private static final String EXERCISE_ADD_ACTIONCOMMAND = "exercise_add_actioncommand";
 
     private Model model;
     private MainView mainView;
@@ -37,6 +38,8 @@ public class Controller implements MouseListener, ActionListener {
         mainView.getWoList().setListData(model.getWoListModel());
         mainView.getExerciseTable().setModel(model.getTableModel());
         mainView.getExerciseTable().addMouseListener(this);
+        mainView.getExAddButton().addActionListener(this);
+        mainView.getExAddButton().setActionCommand(EXERCISE_ADD_ACTIONCOMMAND);
     }
 
     @Override
@@ -114,6 +117,22 @@ public class Controller implements MouseListener, ActionListener {
             partialBean.setWo_id(workoutID);
 
             model.insertWorkoutExercise(partialBean);
+        } else if (e.getActionCommand().equals(EXERCISE_ADD_ACTIONCOMMAND)) {
+        	String name = mainView.getExNameTextField().getText();
+            String desc = mainView.getExDescTextField().getText();
+           
+            ExercisesBean bean = new ExercisesBean();
+            if (name.equals("")) {
+                JOptionPane.showMessageDialog(mainView, "Name required", "Wrong", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (desc.equals("")) {
+                JOptionPane.showMessageDialog(mainView, "Type required", "Wrong", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            bean.setName(name);
+            bean.setDescription(desc);
+            model.insertExercise(bean);
         }
     }
 }
