@@ -7,31 +7,52 @@ import java.awt.*;
 
 public class MainView extends JFrame {
 
-    private JTextField woNameTextField;
+    private static final Font LABEL_FONT = new Font("Arial", Font.PLAIN, 16);
+    private static final Font TEXTFIELD_FONT = new Font("Arial", Font.PLAIN, 16);
 
+    private JTextField woNameTextField;
     private JTextArea woInfoTextArea;
     private JTextField woDateTextField;
+
     private JTextField woTypeTextField;
 
 	private JLabel nameLabel, typeLabel, infoLabel, dateLabel;
-
     private JButton woAddButton;
+
+    private JButton workoutExerciseDeleteButton;
+
+    private JButton workoutExerciseAddButton;
+
     private JTable exerciseTable;
 
     private JList woList;
 
-    private static final Font LABEL_FONT = new Font("Arial", Font.PLAIN, 16);
-    private static final Font TEXTFIELD_FONT = new Font("Arial", Font.PLAIN, 16);
+    private JTextField searchTextField;
 
+    private JButton searchButton;
 
+    public JTextField getSearchTextField() {
+        return searchTextField;
+    }
+
+    public JButton getSearchButton() {
+        return searchButton;
+    }
+
+    public JButton getWorkoutExerciseAddButton() {
+        return workoutExerciseAddButton;
+    }
 	public MainView() throws HeadlessException {
 
 		setLayout(new GridBagLayout());
 		JPanel leftpanel = createLeftpanel();
+        JPanel searchPanel = createSearchPanel();
 		woList = new JList();
         JScrollPane woListScrollPane = new JScrollPane(woList);
         exerciseTable = new JTable();
         exerciseTable.setFillsViewportHeight(true);
+        workoutExerciseDeleteButton = new JButton("DELETE");
+        workoutExerciseAddButton = new JButton("ADD");
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.anchor = GridBagConstraints.FIRST_LINE_START;
@@ -41,7 +62,11 @@ public class MainView extends JFrame {
         gbc.gridy = 0;
         add(leftpanel, gbc);
 
+        gbc.gridy = 1;
+        add(searchPanel, gbc);
+
         gbc.gridx = 1;
+        gbc.gridy = 0;
         gbc.weightx = 1;
         gbc.fill = GridBagConstraints.BOTH;
 
@@ -50,6 +75,11 @@ public class MainView extends JFrame {
         gbc.gridx = 2;
         add(new JScrollPane(exerciseTable), gbc);
 
+        gbc.gridy = 1;
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(workoutExerciseDeleteButton);
+        buttonPanel.add(workoutExerciseAddButton);
+        add(buttonPanel, gbc);
 
         setTitle("Workout App");
 		setSize(1000, 600);
@@ -57,7 +87,19 @@ public class MainView extends JFrame {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setVisible(true);
 
-	}
+    }
+
+    public void clearForm() {
+        woNameTextField.setText("");
+        woTypeTextField.setText("");
+        woInfoTextArea.setText("");
+        woDateTextField.setText("");
+    }
+
+    public JButton getWorkoutExerciseDeleteButton() {
+        return workoutExerciseDeleteButton;
+    }
+
     public JTextField getWoNameTextField() {
         return woNameTextField;
     }
@@ -167,6 +209,7 @@ public class MainView extends JFrame {
         l.setHorizontalAlignment(SwingConstants.RIGHT);
         return l;
     }
+
     private JTextField makeTextField() {
         JTextField tf = new JTextField();
         Dimension d = tf.getPreferredSize();
@@ -175,4 +218,17 @@ public class MainView extends JFrame {
         tf.setFont(TEXTFIELD_FONT);
         return tf;
     }
+
+    private JPanel createSearchPanel() {
+        JPanel p = new JPanel();
+        searchTextField = new JTextField();
+        Dimension d = searchTextField.getPreferredSize();
+        d.width = 250;
+        searchTextField.setPreferredSize(d);
+        searchButton = new JButton("Search");
+        p.add(searchTextField);
+        p.add(searchButton);
+        return p;
+    }
+
 }

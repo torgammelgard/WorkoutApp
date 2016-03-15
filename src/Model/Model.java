@@ -2,7 +2,8 @@ package Model;
 
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
-import java.sql.*;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Model {
@@ -11,15 +12,22 @@ public class Model {
         return tableModel;
     }
 
+    private int currentWOListSelection = -1;
+
     private TableModel tableModel;
     private List<WorkoutsBean> workouts;
-    private String[] columnNames = new String[]{"Name", "Sets", "Reps", "Weight"};
+    private List<WorkoutsExercisesBean> workoutsExercisesBeans;
+
+    private String[] columnNames = new String[]{"Exercise ID", "Sets", "Reps", "Weight"};
 
     public Model() {
         initTable();
         updateList();
     }
 
+    public int getWorkoutIDForSelection(int selection) {
+        return workouts.get(selection).getId();
+    }
     public String[] getWoListModel() {
         String[] names = new String[workouts.size()];
         int i = 0;
@@ -31,7 +39,18 @@ public class Model {
 
     public void updateList() {
         try {
-            workouts = WorkoutManager.getAllWoNames();
+            workouts = WorkoutManager.getAllWorkouts();
+        } catch (SQLException e) {
+            System.err.println("Error message: " + e.getMessage());
+            System.err.println("Error code: " + e.getErrorCode());
+            System.err.println("SQL state: " + e.getSQLState());
+        }
+
+    }
+
+    public void updateSearchList(String searchString) {
+        try {
+            workouts = WorkoutManager.searchWorkouts(searchString);
         } catch (SQLException e) {
             System.err.println("Error message: " + e.getMessage());
             System.err.println("Error code: " + e.getErrorCode());
@@ -91,14 +110,14 @@ public class Model {
         }
     }
     public void updateTable(int selectionIndex) {
-
+        currentWOListSelection = selectionIndex;
         try {
             int id = 0;
             if (workouts != null) {
                 id = workouts.get(selectionIndex).getId();
             }
 
-            List<WorkoutsExercisesBean> workoutsExercisesBeans = WorkoutManager.getWorkoutsExercises(id);
+            workoutsExercisesBeans = WorkoutManager.getWorkoutsExercises(id);
             tableModel = new TableModel() {
                 @Override
                 public int getRowCount() {
@@ -122,7 +141,10 @@ public class Model {
 
                 @Override
                 public boolean isCellEditable(int rowIndex, int columnIndex) {
-                    return false;
+                    if (columnIndex > 0)
+                        return true;
+                    else
+                        return false;
                 }
 
                 @Override
@@ -139,7 +161,25 @@ public class Model {
 
                 @Override
                 public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-
+                    WorkoutsExercisesBean bean = workoutsExercisesBeans.get(rowIndex);
+                    int value;
+                    try {
+                        value = Integer.valueOf((String)aValue);
+                        switch (columnIndex) {
+                            case 1: bean.setSets(value);
+                                break;
+                            case 2: bean.setReps(Integer.valueOf((String)aValue));
+                                break;
+                            case 3: bean.setWeight(Integer.valueOf((String)aValue));
+                                break;
+                            default: break;
+                        }
+                        WorkoutExerciseManager.updateWorkoutExercise(bean);
+                    } catch (NumberFormatException e) {
+                        System.out.println("Not a number");
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 @Override
@@ -170,6 +210,33 @@ public class Model {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public boolean deleteExercise(int sel) {
+        boolean res = false;
+        try {
+            res = WorkoutExerciseManager.deleteWorkoutExercise(workoutsExercisesBeans.get(sel).getWo_id(), workoutsExercisesBeans.get(sel).getEx_id());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        if (res)
+            updateTable(currentWOListSelection);
+        return res;
+    }
+    public boolean insertWorkoutExercise(WorkoutsExercisesBean bean) {
+        boolean res = WorkoutExerciseManager.insertWorkoutExercise(bean);
+
+        return res;
+    }
+
+    public List<ExercisesBean> getExercises() {
+        List<ExercisesBean> list = new ArrayList<>(10);
+        try {
+            list = ExerciseManager.getAllExercises();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 }
 
