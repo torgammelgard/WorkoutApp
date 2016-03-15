@@ -31,4 +31,28 @@ public class ExerciseManager {
 
         return beans;
     }
+
+	public static boolean insertExercise(ExercisesBean bean) throws SQLException {
+
+		 try (
+	                Connection conn = DriverManager.getConnection(DatabaseSettings.CONN_STRING, DatabaseSettings.USERNAME, DatabaseSettings.PASSWORD);
+				 	PreparedStatement stmt = conn.prepareStatement("INSERT INTO exercises (name, description) VALUES (?,?)", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+	                
+
+	        ) {
+			 	stmt.setString(1, bean.getName());
+	            stmt.setString(2, bean.getDescription());
+			 	int affectedRows = stmt.executeUpdate();
+	            System.out.println("Affected rows : " + affectedRows);
+			 	return affectedRows == 1;
+			 	
+	        } catch (SQLException e) {
+	            System.err.println("Error message: " + e.getMessage());
+	            System.err.println("Error code: " + e.getErrorCode());
+	            System.err.println("SQL state: " + e.getSQLState());
+	        }
+
+		
+		return false;
+	}
 }

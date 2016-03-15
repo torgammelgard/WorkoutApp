@@ -13,11 +13,15 @@ public class MainView extends JFrame {
     private JTextField woNameTextField;
     private JTextArea woInfoTextArea;
     private JTextField woDateTextField;
+    private JTextField exNameTextField;
+    private JTextField exDescTextField;
 
     private JTextField woTypeTextField;
 
-	private JLabel nameLabel, typeLabel, infoLabel, dateLabel;
+	private JLabel nameLabel, typeLabel, infoLabel, dateLabel, descLabel, exNameLabel;
     private JButton woAddButton;
+    
+    private JButton exAddButton;
 
     private JButton workoutExerciseDeleteButton;
 
@@ -46,7 +50,9 @@ public class MainView extends JFrame {
 
 		setLayout(new GridBagLayout());
 		JPanel leftpanel = createLeftpanel();
+		JPanel bottomPanel = createBottomPanel();
         JPanel searchPanel = createSearchPanel();
+       
 		woList = new JList();
         JScrollPane woListScrollPane = new JScrollPane(woList);
         exerciseTable = new JTable();
@@ -56,13 +62,21 @@ public class MainView extends JFrame {
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+       // gbc.fill = GridBagConstraints.BOTH;
         gbc.weightx = 0;
         gbc.weighty = 1;
         gbc.gridx = 0;
         gbc.gridy = 0;
         add(leftpanel, gbc);
-
+        
+        gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+        gbc.weightx = 0;
+        gbc.weighty = 1;
+        gbc.gridx = 0;
         gbc.gridy = 1;
+        add(bottomPanel, gbc);
+
+        gbc.gridy = 2;
         add(searchPanel, gbc);
 
         gbc.gridx = 1;
@@ -202,8 +216,71 @@ public class MainView extends JFrame {
         lp.setBorder(leftPanelBorder);
         return lp;
 	}
+    
+    private JPanel createBottomPanel(){
+    	
+    	final Insets insets = new Insets(2, 2, 2, 2);
+		JPanel lp = new JPanel();
+		lp.setLayout(new GridBagLayout());
+		exNameTextField = makeTextField();
+		exDescTextField = new JTextField();
+		
+        exNameLabel = makeLabel("Name : ");
+        descLabel = makeLabel("Description : ");
 
-    private JLabel makeLabel(String text) {
+        exAddButton = new JButton("Add");
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = insets;
+        gbc.weightx = 0;
+        gbc.weighty = 1;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 1;
+        lp.add(exNameLabel, gbc);
+
+        gbc.gridx = 1;
+        gbc.weightx = 1.0;
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+		lp.add(exNameTextField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.weightx = 0;
+        gbc.gridwidth = 1;
+        lp.add(descLabel, gbc);
+
+        gbc.gridx = 1;
+        gbc.weightx = 1.0;
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+		lp.add(exDescTextField, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        gbc.weightx = 1.0;
+        gbc.gridwidth = 1;
+        lp.add(exAddButton, gbc);
+
+        Border leftPanelBorder = BorderFactory.createTitledBorder("Add exercise");
+        lp.setBorder(leftPanelBorder);
+        return lp;
+    	
+    }
+    
+    public JTextField getExNameTextField() {
+		return exNameTextField;
+	}
+
+	public JTextField getExDescTextField() {
+		return exDescTextField;
+	}
+
+	public JButton getExAddButton() {
+		return exAddButton;
+	}
+
+	private JLabel makeLabel(String text) {
         JLabel l = new JLabel(text);
         l.setFont(LABEL_FONT);
         l.setHorizontalAlignment(SwingConstants.RIGHT);
