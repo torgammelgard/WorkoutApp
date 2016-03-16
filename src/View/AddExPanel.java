@@ -2,7 +2,6 @@ package View;
 
 import Model.ExercisesBean;
 import Model.WorkoutsExercisesBean;
-
 import javax.swing.*;
 
 public class AddExPanel extends JPanel {
@@ -11,10 +10,18 @@ public class AddExPanel extends JPanel {
     JTextField weightTextField;
     JList<String> list;
     ExercisesBean[] exercises;
+    JLabel setsLabel;
+    JLabel repsLabel;
+    JLabel weightLabel;
 
     public AddExPanel(ExercisesBean[] exercises) {
         super();
         this.exercises = exercises;
+        
+        setsLabel = new JLabel(" Sets:");
+        repsLabel = new JLabel(" Reps:");
+        weightLabel = new JLabel(" Weight:");
+        
         setsTextField = new JTextField(5);
         repsTextField = new JTextField(5);
         weightTextField = new JTextField(5);
@@ -27,10 +34,14 @@ public class AddExPanel extends JPanel {
         list = new JList<>(names);
 
         add(new JScrollPane(list));
+   
+        add(setsLabel);
         add(setsTextField);
+        add(repsLabel);
         add(repsTextField);
+        add(weightLabel);
         add(weightTextField);
-
+       
     }
 
     public WorkoutsExercisesBean getWorkoutExerciseBean() {
