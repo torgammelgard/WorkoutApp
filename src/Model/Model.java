@@ -18,7 +18,7 @@ public class Model {
     private List<WorkoutsBean> workouts;
     private List<WorkoutsExercisesBean> workoutsExercisesBeans;
 
-    private String[] columnNames = new String[]{"Exercise ID", "Sets", "Reps", "Weight"};
+    private String[] columnNames = new String[]{"Exercise", "Sets", "Reps", "Weight"};
 
     public Model() {
         initTable();
@@ -113,12 +113,13 @@ public class Model {
     public void updateTable(int selectionIndex) {
         currentWOListSelection = selectionIndex;
         try {
-            int id = 0;
+            int workoutID = 0;
             if (workouts != null) {
-                id = workouts.get(selectionIndex).getId();
+                workoutID = workouts.get(selectionIndex).getId();
             }
 
-            workoutsExercisesBeans = WorkoutManager.getWorkoutsExercises(id);
+            workoutsExercisesBeans = WorkoutExerciseManager.getWorkoutsExercises(workoutID);
+            String[] exercise_names = ExerciseManager.getExerciseNamesForWorkout(workoutID);
             tableModel = new TableModel() {
                 @Override
                 public int getRowCount() {
@@ -152,7 +153,7 @@ public class Model {
                 public Object getValueAt(int rowIndex, int columnIndex) {
                     WorkoutsExercisesBean bean = workoutsExercisesBeans.get(rowIndex);
                     switch (columnIndex) {
-                        case 0: return bean.getEx_id();
+                        case 0: return exercise_names[rowIndex];
                         case 1: return bean.getSets();
                         case 2: return bean.getReps();
                         case 3: return bean.getWeight();
@@ -226,7 +227,8 @@ public class Model {
     }
     public boolean insertWorkoutExercise(WorkoutsExercisesBean bean) {
         boolean res = WorkoutExerciseManager.insertWorkoutExercise(bean);
-        updateTable(currentWOListSelection);
+        if (res)
+            updateTable(currentWOListSelection);
         return res;
     }
 

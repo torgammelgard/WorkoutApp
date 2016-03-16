@@ -41,9 +41,9 @@ public class WorkoutManager {
                 Connection conn = DriverManager.getConnection(DatabaseSettings.CONN_STRING, DatabaseSettings.USERNAME, DatabaseSettings.PASSWORD);
                 PreparedStatement stmt = conn.prepareStatement("SELECT * FROM workouts WHERE name LIKE ? OR type LIKE ? OR info LIKE ?", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         ) {
-            stmt.setString(1, searchString);
-            stmt.setString(2, searchString);
-            stmt.setString(3, searchString);
+            stmt.setString(1, "%" + searchString + "%");
+            stmt.setString(2, "%" + searchString + "%");
+            stmt.setString(3, "%" + searchString + "%");
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
@@ -63,33 +63,6 @@ public class WorkoutManager {
         }
 
         return beans;
-    }
-
-    // TODO move this to WOEXMANAGER
-    public static List<WorkoutsExercisesBean> getWorkoutsExercises(int workoutID) throws SQLException {
-        List<WorkoutsExercisesBean> l = new ArrayList<>(10);
-        try (
-                Connection conn = DriverManager.getConnection(DatabaseSettings.CONN_STRING, DatabaseSettings.USERNAME, DatabaseSettings.PASSWORD);
-                PreparedStatement stmt = conn.prepareStatement("SELECT * FROM workouts_exercises we LEFT JOIN workouts w ON we.workout_id = w.id JOIN exercises e ON we.exercise_id = e.id WHERE we.workout_id = ?", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
-        ) {
-            stmt.setInt(1, workoutID);
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                WorkoutsExercisesBean bean = new WorkoutsExercisesBean();
-                bean.setWo_id(rs.getInt("workout_id"));
-                bean.setEx_id(rs.getInt("exercise_id"));
-                bean.setSets(rs.getInt("sets"));
-                bean.setReps(rs.getInt("reps"));
-                bean.setWeight(rs.getInt("weight"));
-                l.add(bean);
-            }
-        } catch (SQLException e) {
-            System.err.println("Error message: " + e.getMessage());
-            System.err.println("Error code: " + e.getErrorCode());
-            System.err.println("SQL state: " + e.getSQLState());
-        }
-        return l;
     }
 
     public static boolean insertWorkout(WorkoutsBean bean) throws SQLException {
