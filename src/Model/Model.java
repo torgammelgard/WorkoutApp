@@ -28,6 +28,7 @@ public class Model {
     public int getWorkoutIDForSelection(int selection) {
         return workouts.get(selection).getId();
     }
+
     public String[] getWoListModel() {
         String[] names = new String[workouts.size()];
         int i = 0;
@@ -212,7 +213,7 @@ public class Model {
         return false;
     }
 
-    public boolean deleteExercise(int sel) {
+    public boolean deleteWorkoutExercise(int sel) {
         boolean res = false;
         try {
             res = WorkoutExerciseManager.deleteWorkoutExercise(workoutsExercisesBeans.get(sel).getWo_id(), workoutsExercisesBeans.get(sel).getEx_id());
@@ -225,7 +226,7 @@ public class Model {
     }
     public boolean insertWorkoutExercise(WorkoutsExercisesBean bean) {
         boolean res = WorkoutExerciseManager.insertWorkoutExercise(bean);
-
+        updateTable(currentWOListSelection);
         return res;
     }
 
@@ -246,7 +247,6 @@ public class Model {
 			
 			e.printStackTrace();
 		}
-    	System.out.println(res);
     	return res;
     }
 }

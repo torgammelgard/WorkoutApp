@@ -1,6 +1,9 @@
 package Controller;
 
-import Model.*;
+import Model.ExercisesBean;
+import Model.Model;
+import Model.WorkoutsBean;
+import Model.WorkoutsExercisesBean;
 import View.AddExPanel;
 import View.MainView;
 
@@ -100,7 +103,7 @@ public class Controller implements MouseListener, ActionListener {
         } else if (e.getActionCommand().equals(WORKOUT_EXERCISE_DELETE_ACTIONCOMMAND)) {
             int sel = mainView.getExerciseTable().getSelectedRow();
             if (sel != -1)
-                model.deleteExercise(sel);
+                model.deleteWorkoutExercise(sel);
         } else if (e.getActionCommand().equals(SEARCH_WORKOUTS_ACTIONCOMMAND)) {
             model.updateSearchList(mainView.getSearchTextField().getText());
             JList list = mainView.getWoList();
@@ -110,29 +113,44 @@ public class Controller implements MouseListener, ActionListener {
             // Ask the user for some information
             List list = model.getExercises();
             AddExPanel addExPanel = new AddExPanel((ExercisesBean[]) list.toArray(new ExercisesBean[list.size()]));
-            JOptionPane.showConfirmDialog(mainView, addExPanel);
-            WorkoutsExercisesBean partialBean = addExPanel.getWorkoutExerciseBean();
+            int res = JOptionPane.showConfirmDialog(mainView, addExPanel);
+            if (res == JOptionPane.OK_OPTION) {
+                WorkoutsExercisesBean partialBean = addExPanel.getWorkoutExerciseBean();
+                if (partialBean == null)
+                    return;
+                int workoutID = model.getWorkoutIDForSelection(mainView.getWoList().getSelectedIndex());
+                partialBean.setWo_id(workoutID);
+                if (!model.insertWorkoutExercise(partialBean))
+                    showErrorMessage("Insertion was unsuccessful");
+            }
 
-            int workoutID = model.getWorkoutIDForSelection(mainView.getWoList().getSelectedIndex());
-            partialBean.setWo_id(workoutID);
-
-            model.insertWorkoutExercise(partialBean);
         } else if (e.getActionCommand().equals(EXERCISE_ADD_ACTIONCOMMAND)) {
-        	String name = mainView.getExNameTextField().getText();
+            String name = mainView.getExNameTextField().getText();
             String desc = mainView.getExDescTextField().getText();
-           
+
             ExercisesBean bean = new ExercisesBean();
-            if (name.equals("")) {
-                JOptionPane.showMessageDialog(mainView, "Name required", "Wrong", JOptionPane.ERROR_MESSAGE);
-                return;
+            validate:
+            {
+                if (name.equals("")) {
+                    showErrorMessage("Name required");
+                    break validate;
+                }
+                if (desc.equals("")) {
+                    showErrorMessage("Type required");
+                    break validate;
+                }
+                bean.setName(name);
+                bean.setDescription(desc);
+                if (!model.insertExercise(bean))
+                    showErrorMessage("Insertion was unsuccessful");
+                else
+                    mainView.clearAddExForm();
             }
-            if (desc.equals("")) {
-                JOptionPane.showMessageDialog(mainView, "Type required", "Wrong", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            bean.setName(name);
-            bean.setDescription(desc);
-            model.insertExercise(bean);
+
         }
+    }
+
+    private void showErrorMessage(String msg) {
+        JOptionPane.showMessageDialog(mainView, msg, "Failed", JOptionPane.WARNING_MESSAGE);
     }
 }

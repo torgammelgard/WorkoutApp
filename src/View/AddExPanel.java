@@ -37,12 +37,20 @@ public class AddExPanel extends JPanel {
         WorkoutsExercisesBean bean = new WorkoutsExercisesBean();
         int sel = list.getSelectedIndex();
         if (sel == -1)
-            return bean;
+            return null;
         int id = exercises[sel].getId();
         bean.setEx_id(id);
-        bean.setSets(Integer.valueOf(setsTextField.getText()));
-        bean.setReps(Integer.valueOf(repsTextField.getText()));
-        bean.setWeight(Integer.valueOf(weightTextField.getText()));
+        try {
+            int sets = Integer.valueOf(setsTextField.getText());
+            int reps = Integer.valueOf(repsTextField.getText());
+            int weight = Integer.valueOf(weightTextField.getText());
+            bean.setSets(sets);
+            bean.setReps(reps);
+            bean.setWeight(weight);
+        } catch (NumberFormatException e) {
+            System.out.println("Couldn't convert field values into numbers");
+            return null;
+        }
         return bean;
     }
 }

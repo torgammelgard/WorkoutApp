@@ -8,9 +8,11 @@ import java.awt.*;
 
 public class MainView extends JFrame {
 
-    private static final Font HEADER_FONT = new Font("Arial", Font.BOLD, 24);
-    private static final Font LABEL_FONT = new Font("Arial", Font.PLAIN, 16);
-    private static final Font TEXTFIELD_FONT = new Font("Arial", Font.PLAIN, 16);
+    private static final Font HEADER_FONT = new Font("Verdana", Font.BOLD, 20);
+    private static final Font LABEL_FONT = new Font("Verdana", Font.PLAIN, 16);
+    private static final Font TEXTFIELD_FONT = new Font("Verdana", Font.PLAIN, 16);
+    private static final Font LIST_FONT = new Font("Verdana", Font.PLAIN, 24);
+    private static final Font TABLE_FONT = new Font("Verdana", Font.PLAIN, 18);
 
     private JTextField woNameTextField;
     private JTextArea woInfoTextArea;
@@ -51,17 +53,21 @@ public class MainView extends JFrame {
 	public MainView() throws HeadlessException {
 
 		setLayout(new GridBagLayout());
+
         JPanel leftpanel = createLeftpanel();
 		JPanel bottomPanel = createBottomPanel();
         JPanel searchPanel = createSearchPanel();
        
 		woList = new JList();
+        woList.setFont(LIST_FONT);
 
         JScrollPane woListScrollPane = new JScrollPane(woList);
 
         exerciseTable = new JTable();
+        exerciseTable.setFont(TABLE_FONT);
         JTableHeader header = exerciseTable.getTableHeader();
-        header.setPreferredSize(new Dimension(125, 40));
+        header.setPreferredSize(new Dimension(150, 50));
+        header.setMinimumSize(new Dimension(150, 50));
         header.setFont(HEADER_FONT);
         exerciseTable.setFillsViewportHeight(true);
         workoutExerciseDeleteButton = new JButton("DELETE");
@@ -69,43 +75,49 @@ public class MainView extends JFrame {
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.anchor = GridBagConstraints.FIRST_LINE_START;
-       // gbc.fill = GridBagConstraints.BOTH;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.weightx = 0;
         gbc.weighty = 1;
+        gbc.gridheight = 1;
         gbc.gridx = 0;
         gbc.gridy = 0;
         add(leftpanel, gbc);
-        
+
         gbc.anchor = GridBagConstraints.FIRST_LINE_START;
         gbc.weightx = 0;
         gbc.weighty = 1;
+        gbc.gridheight = 1;
         gbc.gridx = 0;
         gbc.gridy = 1;
         add(bottomPanel, gbc);
 
         gbc.gridy = 2;
+        gbc.gridheight = 1;
         add(searchPanel, gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 0;
         gbc.weightx = 1;
         gbc.fill = GridBagConstraints.BOTH;
-
+        gbc.gridheight = 2;
         add(woListScrollPane, gbc);
 
         gbc.gridx = 2;
+        gbc.gridheight = 2;
         add(new JScrollPane(exerciseTable), gbc);
 
-        gbc.gridy = 1;
+        gbc.gridy = 2;
+        gbc.gridheight = 1;
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(workoutExerciseDeleteButton);
         buttonPanel.add(workoutExerciseAddButton);
         add(buttonPanel, gbc);
 
         setTitle("Workout App");
-		setSize(1000, 600);
-		setLocationRelativeTo(null);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+        //setSize(1200, 800);
+        pack();
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setVisible(true);
 
     }
@@ -115,6 +127,11 @@ public class MainView extends JFrame {
         woTypeTextField.setText("");
         woInfoTextArea.setText("");
         woDateTextField.setText("");
+    }
+
+    public void clearAddExForm() {
+        exNameTextField.setText("");
+        exDescTextField.setText("");
     }
 
     public JButton getWorkoutExerciseDeleteButton() {
